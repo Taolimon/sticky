@@ -9,5 +9,8 @@ env.bak/
 venv.bak/
 energy-monitoring/
 
+# Images
+*.clip
+
 # Outputs
 sticky_notes.json
