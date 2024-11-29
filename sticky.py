@@ -19,6 +19,7 @@ class StickyNoteApp(QMainWindow):
         self.setWindowTitle("Sticky Notes")
         self.setGeometry(100, 100, 300, 300)
         self.setStyleSheet("background-color: #fffbcc;")  # sticky note yellow
+        self.setWindowIcon(QIcon('images/stickylogo.png'))
 
         # create a button to add new notes
         self.button = QPushButton("new note")
@@ -35,7 +36,7 @@ class StickyNoteApp(QMainWindow):
         # create a text edit widget for the note
         self.text_edit = QTextEdit(self)
         self.text_edit.setStyleSheet("font-size: 16px; border: none; background-color: #fffbcc;")
-        self.text_edit.setText("Type your note here...")
+        self.text_edit.setPlaceholderText("Type your note here...")
         self.text_edit.setAlignment(Qt.AlignTop)
 
         # set up layout
@@ -80,13 +81,13 @@ class StickyNoteApp(QMainWindow):
         return
     
     def showNewNote(self):
-        newNote = StickyNote()
+        newNote = StickyNote(self.settings)
         newNote.move(self.pos().x(), self.pos().y())
         self.stickyNotesArray.append(newNote)
         newNote.show()
 
     def addNewNote(self, id, text, x, y):
-        newNote = StickyNote()
+        newNote = StickyNote(self.settings)
         newNote.loadNoteData(id, text, x, y)
         newNote.text_edit.setPalette(self.settings.colour_palette.currentGradient)
         self.stickyNotesArray.append(newNote)
@@ -94,9 +95,10 @@ class StickyNoteApp(QMainWindow):
 
 class StickyNote(QWidget):
     # Appears as a free floating window if it has no parent
-    def __init__(self):
+    def __init__(self, settings):
         super().__init__()
         self.setWindowFlags(Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint)
+        self.settings = settings
         self.init_note()
         self.offset = None
 
@@ -122,10 +124,11 @@ class StickyNote(QWidget):
         # create a text edit widget for the note
         self.text_edit = QTextEdit(self)
         self.text_edit.setStyleSheet(
-            "font-size: 16px; border: none; background-color: #fffbcc; border-radius: 5px; border-top-right-radius: 0px; border-top-left-radius: 0px; padding: 5px"
+            "font-size: 16px; border: none; background-color: qlineargradient( x1:1, y1:0, x2:1, y2:1, stop:0 rgba(255, 251, 204, 255), stop:1 rgba(211, 178, 143, 255)); border-radius: 5px; border-top-right-radius: 0px; border-top-left-radius: 0px; padding: 5px"
             )
-        self.text_edit.setText("Type your note here...")
+        self.text_edit.setPlaceholderText("Type your note here...")
         self.text_edit.setAlignment(Qt.AlignTop)
+        # self.text_edit.setPalette(self.settings.colour_palette.currentGradient)
 
         # Add effects
         # self.shadow = QGraphicsDropShadowEffect()
@@ -156,6 +159,12 @@ class StickyNote(QWidget):
     # Events
     def paintEvent(self, event):
         painter = QPainter(self)
+
+        # if (self.settings.colour_palette.currentGradient):
+        #     painter.fillRect(self.rect(), self.settings.colour_palette.currentGradient.brush(QPalette.Window))
+        # else:
+        #     painter.setBrush(QBrush(QColor(self.settings.colour_palette.currentPalette['background-color'])))
+
         shadow_color = QColor(20, 20, 20) # Semi-transparent black 
         shadow_range = 50
 
@@ -169,8 +178,8 @@ class StickyNote(QWidget):
                 painter.drawRoundedRect(rect, 20, 20)
 
         painter.setPen(Qt.NoPen)
-        painter.setBrush(QBrush(QColor("#fffbcc"))) 
-        painter.drawRoundedRect(self.rect().adjusted(10, 10, -10, -10), 15, 15)
+        painter.setBrush(self.settings.colour_palette.currentGradient.brush(QPalette.Window)) 
+        painter.drawRoundedRect(self.rect().adjusted(10, 10, -10, -10), 10, 10)
     
     def moveEvent(self, event):
         super(StickyNote, self).moveEvent(event)
@@ -226,7 +235,7 @@ class ColourPalette():
         p = QPalette()
         gradient = QLinearGradient(0, 0, 0, 400)
         gradient.setColorAt(0.0, QColor(255, 251, 204))
-        gradient.setColorAt(1.0, QColor(161, 128, 93))
+        gradient.setColorAt(1.0, QColor(181, 148, 113))
         p.setBrush(QPalette.Window, QBrush(gradient))
         return p
     
