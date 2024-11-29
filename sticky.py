@@ -1,7 +1,7 @@
 import sys
-from PyQt5.QtWidgets import QApplication, QMainWindow, QTextEdit, QVBoxLayout, QWidget, QPushButton, QGraphicsEffect, QGraphicsDropShadowEffect
+from PyQt5.QtWidgets import QApplication, QMainWindow, QTextEdit, QVBoxLayout, QWidget, QPushButton, QGraphicsEffect, QGraphicsDropShadowEffect, QHBoxLayout
 from PyQt5.QtGui import *
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, QRect
 import random
 import json
 
@@ -79,8 +79,9 @@ class StickyNoteApp(QMainWindow):
     def updateNotesArray():
         return
     
-    def showNewNote(self, checked):
+    def showNewNote(self):
         newNote = StickyNote()
+        newNote.move(self.pos().x(), self.pos().y())
         self.stickyNotesArray.append(newNote)
         newNote.show()
 
@@ -95,7 +96,7 @@ class StickyNote(QWidget):
     # Appears as a free floating window if it has no parent
     def __init__(self):
         super().__init__()
-        self.setWindowFlags(Qt.FramelessWindowHint)
+        self.setWindowFlags(Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint)
         self.init_note()
         self.offset = None
 
@@ -112,6 +113,12 @@ class StickyNote(QWidget):
             "border: none; background-color: #fffbcc; border-radius: 5px; border-bottom-right-radius: 0px; border-bottom-left-radius: 0px; padding: 5px;"
         )
 
+        # create a close button
+        self.close_button = QPushButton("X", self.header)
+        self.close_button.setFixedSize(30, 20)
+        self.close_button.setStyleSheet("background-color: red; color: white; border-radius: 5px;")
+        self.close_button.clicked.connect(self.close_note)
+
         # create a text edit widget for the note
         self.text_edit = QTextEdit(self)
         self.text_edit.setStyleSheet(
@@ -121,23 +128,49 @@ class StickyNote(QWidget):
         self.text_edit.setAlignment(Qt.AlignTop)
 
         # Add effects
-        self.shadow = QGraphicsDropShadowEffect()
-        self.shadow.setBlurRadius(20)
-        self.shadow.setOffset(0, 0)
-        self.shadow.setColor(Qt.black)
-        self.setGraphicsEffect(self.shadow)
+        # self.shadow = QGraphicsDropShadowEffect()
+        # self.shadow.setBlurRadius(20)
+        # self.shadow.setOffset(0, 0)
+        # self.shadow.setColor(Qt.black)
+        # self.setGraphicsEffect(self.shadow)
+        # Disused QGraphicsDropShadowEffect() as it conflicts with the frameless window in Windows(OS) and causes
+        # the error "UpdateLayeredWindowIndirect failed (The parameter is incorrect.)"
 
-        # set up layout
+        # set up layouts
+        header_layout = QHBoxLayout(self.header)
+        header_layout.addStretch()
+        header_layout.addWidget(self.close_button)
+        header_layout.setContentsMargins(0, 0, 0, 5)
+        header_layout.setSpacing(5)
+
         layout = QVBoxLayout()
         layout.addWidget(self.header)
         layout.addWidget(self.text_edit)
         layout.setSpacing(0)
         layout.setContentsMargins(20, 20, 20, 20)
+
         container = QWidget()
         container.setLayout(layout)
         self.setLayout(layout)
 
     # Events
+    def paintEvent(self, event):
+        painter = QPainter(self)
+        shadow_color = QColor(20, 20, 20) # Semi-transparent black 
+        shadow_range = 50
+
+        for i in range(shadow_range): # Draw multiple rectangles to create a blur effect 
+            opacity = 10 - 1
+            if (opacity >= 0):
+                shadow_color.setAlpha(opacity)
+                rect = QRect(self.rect().adjusted(i, i, -i, -i)) 
+                painter.setPen(Qt.NoPen)
+                painter.setBrush(QBrush(shadow_color)) 
+                painter.drawRoundedRect(rect, 20, 20)
+
+        painter.setPen(Qt.NoPen)
+        painter.setBrush(QBrush(QColor("#fffbcc"))) 
+        painter.drawRoundedRect(self.rect().adjusted(10, 10, -10, -10), 15, 15)
     
     def moveEvent(self, event):
         super(StickyNote, self).moveEvent(event)
@@ -161,6 +194,9 @@ class StickyNote(QWidget):
     def mouseReleaseEvent(self, event):
         self.offset = None
         super().mouseReleaseEvent(event)
+
+    def close_note(self):
+        self.close()
 
     def getNoteID(self):
         return self.noteID
