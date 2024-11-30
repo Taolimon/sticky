@@ -22,16 +22,19 @@ class StickyNoteApp(QMainWindow):
         self.setWindowIcon(QIcon('images/stickylogo2.png'))
 
         # create a button to add new notes
-        self.button = QPushButton("new note")
+        self.button = QPushButton()
         self.button.clicked.connect(self.showNewNote)
+        self.button.setIcon(QIcon('images/newnote.png'))
 
         # save notes
-        self.saveButton = QPushButton("save notes")
+        self.saveButton = QPushButton()
         self.saveButton.clicked.connect(self.saveNotes)
+        self.saveButton.setIcon(QIcon('images/saveicon.png'))
 
         # load notes
-        self.loadButton = QPushButton("load button")
+        self.loadButton = QPushButton()
         self.loadButton.clicked.connect(self.loadNotes)
+        self.loadButton.setIcon(QIcon('images/loadnotes.png'))
 
         # set up layout
         layout = QHBoxLayout()
