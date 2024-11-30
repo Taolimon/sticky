@@ -17,9 +17,9 @@ class StickyNoteApp(QMainWindow):
 
     def init_ui(self):
         self.setWindowTitle("Sticky Notes")
-        self.setGeometry(100, 100, 300, 300)
+        #self.setGeometry(100, 100, 300, 300)
         self.setStyleSheet("background-color: #fffbcc;")  # sticky note yellow
-        self.setWindowIcon(QIcon('images/stickylogo.png'))
+        self.setWindowIcon(QIcon('images/stickylogo2.png'))
 
         # create a button to add new notes
         self.button = QPushButton("new note")
@@ -33,15 +33,8 @@ class StickyNoteApp(QMainWindow):
         self.loadButton = QPushButton("load button")
         self.loadButton.clicked.connect(self.loadNotes)
 
-        # create a text edit widget for the note
-        self.text_edit = QTextEdit(self)
-        self.text_edit.setStyleSheet("font-size: 16px; border: none; background-color: #fffbcc;")
-        self.text_edit.setPlaceholderText("Type your note here...")
-        self.text_edit.setAlignment(Qt.AlignTop)
-
         # set up layout
-        layout = QVBoxLayout()
-        layout.addWidget(self.text_edit)
+        layout = QHBoxLayout()
         layout.addWidget(self.button)
         layout.addWidget(self.saveButton)
         layout.addWidget(self.loadButton)
