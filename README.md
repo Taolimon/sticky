@@ -3,7 +3,7 @@
 
 <div align="center">
   <a href="https://github.com/Taolimon/sticky">
-    <img src="images/stickylogo.png" alt="Logo" width="80" height="80">
+    <img src="images/stickylogo2.png" alt="Logo" width="80" height="80">
   </a>
 
   <h3 align="center">Sticky</h3>
