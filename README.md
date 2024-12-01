@@ -16,5 +16,7 @@
 
 ## About
 
-Put a bunch of these sticky notes around your screen to remind you of stuff for short-term use.
-When I was a kid, I'd use similar programs to remind myself of stuff I need to do.
+![screenshot](./images/screenshot.png)
+
+Place sticky notes around your screen to remind you of information for short-term use.
+When I was a kid, I'd use similar programs to make my digital space fa.
