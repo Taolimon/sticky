@@ -18,5 +18,5 @@
 
 ![screenshot](./images/screenshot.png)
 
-Place sticky notes around your screen to remind you of information for short-term use.
-When I was a kid, I'd use similar programs to make my digital space fa.
+Use this program to place sticky notes around your screen to remind you of information for short-term use.
+When I was a kid, I'd use similar programs to make my digital space familiar.
