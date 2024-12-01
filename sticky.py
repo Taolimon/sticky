@@ -9,6 +9,7 @@ import json
 class StickyNoteApp(QMainWindow):
     def __init__(self):
         super().__init__()
+        self.setWindowFlags(Qt.WindowStaysOnTopHint)
         self.init_ui()
         self.stickyNotesArray = []
         self._SAVE_FILE = "sticky_notes.json"
