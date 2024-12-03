@@ -1,5 +1,5 @@
 import sys
-from PyQt5.QtWidgets import QApplication, QMainWindow, QTextEdit, QVBoxLayout, QWidget, QPushButton, QGraphicsEffect, QGraphicsDropShadowEffect, QHBoxLayout
+from PyQt5.QtWidgets import QApplication, QMainWindow, QTextEdit, QVBoxLayout, QWidget, QPushButton, QGraphicsEffect, QGraphicsDropShadowEffect, QHBoxLayout, QShortcut
 from PyQt5.QtGui import *
 from PyQt5.QtCore import Qt, QRect
 import random
@@ -23,9 +23,9 @@ class StickyNoteApp(QMainWindow):
         self.setWindowIcon(QIcon('images/stickylogo2.png'))
 
         # create a button to add new notes
-        self.button = QPushButton()
-        self.button.clicked.connect(self.showNewNote)
-        self.button.setIcon(QIcon('images/newnote.png'))
+        self.newNotebutton = QPushButton()
+        self.newNotebutton.clicked.connect(self.showNewNote)
+        self.newNotebutton.setIcon(QIcon('images/newnote.png'))
 
         # save notes
         self.saveButton = QPushButton()
@@ -37,9 +37,17 @@ class StickyNoteApp(QMainWindow):
         self.loadButton.clicked.connect(self.loadNotes)
         self.loadButton.setIcon(QIcon('images/loadnotes.png'))
 
+        # shortcuts
+        self.saveshortcut = QShortcut(QKeySequence("Ctrl+S"), self)
+        self.saveshortcut.activated.connect(self.saveNotes)
+        self.load_shortcut = QShortcut(QKeySequence("Ctrl+L"), self)
+        self.load_shortcut.activated.connect(self.loadNotes)
+        self.new_note_shortcut = QShortcut(QKeySequence("Ctrl+N"), self)
+        self.new_note_shortcut.activated.connect(self.showNewNote)
+
         # set up layout
         layout = QHBoxLayout()
-        layout.addWidget(self.button)
+        layout.addWidget(self.newNotebutton)
         layout.addWidget(self.saveButton)
         layout.addWidget(self.loadButton)
         container = QWidget()
